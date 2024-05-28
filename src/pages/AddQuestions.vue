@@ -4,15 +4,13 @@ import {ref, watch} from "vue";
 
   const store = useStore()
   import Card from "../components/Card.vue"
+  import SQLBuilder from "../components/SQLBuilder.vue";
   const questions = store.state.questions
   const quesList = ref(null)
   function newQuestion(){
     store.commit("newQuestion")
   }
 
-  watch(store.state.questions, () => {
-    console.log("Changed")
-  })
 </script>
 
 <template>
@@ -24,8 +22,9 @@ import {ref, watch} from "vue";
       </div>
       <button @click="newQuestion" class="bg-blue-400 px-5 py-2 rounded-lg text-sm mt-5">New</button>
     </div>
-    <div class="bg-red-50 h-full rounded-lg px-5 py-5 font-bold">
+    <div class="bg-red-50 h-full rounded-lg px-5 py-5 overflow-scroll">
       <p class="font-bold">SQL</p>
+      <s-q-l-builder/>
     </div>
   </div>
 </template>

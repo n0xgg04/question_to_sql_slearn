@@ -1,4 +1,5 @@
 import {createStore} from "vuex";
+import _ from "lodash"
 
 type Question = {
     title: string;
@@ -22,6 +23,9 @@ const store = createStore({
         },
         update(state: any, payload: { index: number; data: Question }) {
             state.questions[payload.index] = payload.data;
+        },
+        deleteQues(state: any, payload: {index:number}){
+            state.questions.splice(payload.index,1)
         }
     }
 })

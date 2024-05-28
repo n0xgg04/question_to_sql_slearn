@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue";
+import {ref, watch} from "vue";
  import {useStore} from "vuex";
 
  const props = defineProps<{
@@ -21,12 +21,14 @@ import {onMounted, reactive, ref} from "vue";
      }
    }
 
-  store.commit({
-    type: "update",
-    payload
-  })
+  store.commit("update",payload)
 
-   editing.value = false
+ }
+
+ const deleteQ = () => {
+   store.commit("deleteQues", {
+     index: props.id_ques
+   })
  }
 
  const vtitle = ref(props.title)
@@ -38,19 +40,30 @@ import {onMounted, reactive, ref} from "vue";
 
 const op = [A,B,C,D]
 
+watch(op, ([A,B,C,D]) => {
+  save()
+})
+
+watch(vtitle, () => {
+  save()
+})
+
 </script>
 
 <template>
   <div class="bg-gray-200 rounded-lg p-5 flex flex-col">
     <div class="flex flex-row justify-end pb-5" >
-      <button v-if="editing" @click.prevent="save" class="rounded-lg bg-green-400 px-5 py-2">Save</button>
+      <button @click.prevent="deleteQ" class="rounded-lg bg-red-400 px-5 py-2">Delete</button>
     </div>
     <p @click="editing = true" v-if="!editing">{{vtitle}}</p>
     <input v-model="vtitle" v-if="editing" name="question"/>
     <div class="mt-2">
       <div class="flex flex-col gap-2" v-for="(item,index) in options">
         <div class="flex flex-row gap-x-2 mt-2">
-          <input @click="vcorrect = index" v-bind:value="index" type="radio" :key="index" v-bind:name="title"/>
+          <input @click="() => {
+            vcorrect = index
+            save()
+          }" v-bind:value="index" type="radio" :key="index" v-bind:name="title"/>
           <div @click="editing = true">
             <p v-if="!editing">{{op[index].value}}</p>
             <textarea v-model="op[index].value" autocapitalize="sentences" v-if="editing"/>
